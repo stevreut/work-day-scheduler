@@ -1,3 +1,5 @@
+let calendarInfo = [];  // initial default is empty array prior to loading
+
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
@@ -21,6 +23,7 @@ $(function () {
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
+  loadSavedCalendarInfo();
   //
   // TODO: Add code to display the current date in the header of the page.
   displayTodayInHeader();
@@ -98,12 +101,45 @@ function renderRows() {
 function displayTodayInHeader() {
   console.log('alter date');
   let currDayPara = document.querySelector("#currentDay");
-  console.log('para = ' + currDayPara);
+  console.log('para = ' + currDayPara.textContent);
   if (currDayPara !== null) {
-    let dayPhrase = dayjs().format("MMM D, YYYY");
+    let dayPhrase = dayjs().format("dddd MMM[.] D, YYYY");
     console.log("day phrase = " + dayPhrase);
     currDayPara.textContent = dayPhrase;
   } else {
     currDayPara.textContent = "";
+  }
+}
+
+function loadSavedCalendarInfo() {
+  console.log('started load');
+  calendarInfo = JSON.parse(localStorage.getItem("calendar-info"));
+  if (calendarInfo === null) {
+    console.log('info set to empty array');
+    calendarInfo = [];
+  }
+  for (let i=0;i<calendarInfo.length;i++) {
+    let entry = calendarInfo[i];
+    console.log('loaded entry for ' + i + ' = ' + entry);
+    let numKey = entry.key;
+    console.log('loaded num key = ' + numKey);
+    let hourKey = "hour-" + numKey;
+    console.log('string hour key = "' + hourKey + '"');
+    let content = entry.content;
+    console.log('content for ' + i + ' = ' + content + '"');
+    let outerDivLocal = document.querySelector("#"+hourKey);
+    if (outerDivLocal === null) {
+      console.log('no div found for key "' + hourKey + '"');
+    } else {
+      console.log('div found for "' + hourKey + '"');
+      console.log('div contents = ' + outerDivLocal);
+      let txtArea = document.querySelector("#"+hourKey+ " textarea");
+      if (txtArea === null) {
+        console.log('no textarea found for "' + hourKey + '"');
+      } else {
+        console.log('set textarea for "' + hourKey + '" with "' + content + '"');
+        txtArea.value = content;
+      }
+    }
   }
 }
