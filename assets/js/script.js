@@ -168,6 +168,8 @@ function addHourListListeners() {
         console.log("textarea change detected");
         let idx = elem.getAttribute("data-idx");
         console.log("change was to textarea for hour-" + idx);
+        elem.classList.add("unsaved");
+        console.log('changed hour-' + idx + ' to unsaved');
       }
     })
   }
@@ -178,7 +180,8 @@ function saveForHourKey(hKey) {
   if (div === null) {
     console.log("no div found for key '" + hKey + "'");
   } else {
-    content = document.querySelector("#"+hKey + " textarea").value;
+    let txtArea = document.querySelector("#"+hKey + " textarea");
+    content = txtArea.value;
     console.log("textarea content to save  = '" + content + "'");
     let numKey = parseInt(hKey.substring(5));  // Ignore "hour-" and convert to numeric
     if (numKey === null) {
@@ -206,6 +209,9 @@ function saveForHourKey(hKey) {
           localStorage.setItem("calendar-info",JSON.stringify(calendarInfo));
         } // else no point in appending empty content - effectively a non-change
       }
+      // Regardless of whether a localStorage change was needed, the "unsaved" class should be cleared
+      // to signal use that nothing further is needed.
+      txtArea.classList.remove("unsaved");  // TODO - must test what happens when "unsaved" class has not been applied
     }
   }
 }
