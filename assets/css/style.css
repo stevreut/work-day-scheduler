@@ -12,6 +12,12 @@ textarea {
   padding: 10px;
 }
 
+.unsaved {
+  color: #2a3939;
+  font-weight: bold;
+  font-style: italic;
+}
+
 .description {
   white-space: pre-wrap;
 }

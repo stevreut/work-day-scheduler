@@ -12,7 +12,7 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
-  addSaveListener();
+  addHourListListeners();
   //
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
@@ -33,7 +33,7 @@ $(function () {
 function renderRows() {
 // <div id="hour-9" class="row time-block past/present/future">
 //   <div class="col-2 col-md-1 hour text-center py-3">9AM</div>
-//   <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
+//   <textarea class="col-8 col-md-10 description" rows="3" data-idx="9"> </textarea>
 //   <button class="btn saveBtn col-2 col-md-1" aria-label="save" data-idx="9">
 //     <i class="fas fa-save" aria-hidden="true" data-idx="9"></i>
 //   </button>
@@ -81,6 +81,7 @@ function renderRows() {
     let textArea = document.createElement("textarea");
     textArea.setAttribute("class","col-8 col-md-10 description");
     textArea.setAttribute("rows","3");
+    textArea.setAttribute("data-idx",hr);
     outerDiv.appendChild(textArea);
     let saveButton = document.createElement("button");
     saveButton.setAttribute("class","btn saveBtn col-2 col-md-1");
@@ -143,7 +144,7 @@ function loadSavedCalendarInfo() {
   }
 }
 
-function addSaveListener() {
+function addHourListListeners() {
   console.log('adding listener');
   let hourList = document.querySelector("#hour-list");
   if (hourList === null) {
@@ -158,9 +159,15 @@ function addSaveListener() {
         let hourKey = "hour-" + elem.getAttribute("data-idx");
         console.log('key for changed item = ' + hourKey);
         saveForHourKey(hourKey);
-      } else {
-        console.log("click event was not a match");
-        // TODO - need to understanding why
+      }
+    })
+    hourList.addEventListener("change" /*TODO*/,function(event) {
+      console.log("change listener triggered");
+      let elem = event.target;
+      if (elem.matches("textarea")) {
+        console.log("textarea change detected");
+        let idx = elem.getAttribute("data-idx");
+        console.log("change was to textarea for hour-" + idx);
       }
     })
   }
