@@ -40,22 +40,7 @@ function renderRows() {
     outerDiv.setAttribute("class",classValue);
     let innerDiv = document.createElement("div");
     innerDiv.setAttribute("class","col-2 col-md-1 hour text-center py-3");
-    let hourLabel;
-    // Calculate display value of hour based on usual convention:
-    //   12AM = midnight (beginning of day = hour 0)
-    //   12PM = noon (hour = 12)
-    //   hours less than 12 or displayed as-is with AM
-    //   hours greater than 12 are diminished by 12 and displayed with PM
-    //     (e.g. 13 -> "1PM")
-    if (hr === 0) {
-      hourLabel = "12AM";
-    } else if (hr < 12) {
-      hourLabel = hr + "AM";
-    } else if (hr === 12) {
-      hourLabel = "12PM";
-    } else {
-      hourLabel = (hr-12)+"PM";
-    }
+    let hourLabel = dayjs().hour(hr).minute(0).format("hA");  // format hour as "9AM", "10AM", ...
     innerDiv.textContent = hourLabel;
     outerDiv.appendChild(innerDiv);
     let textArea = document.createElement("textarea");
