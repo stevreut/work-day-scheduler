@@ -38,13 +38,9 @@ function renderRows() {
 //     <i class="fas fa-save" aria-hidden="true"></i>
 //   </button>
 // </div>
-  const FIRST_HOUR = 8;
-  const LAST_HOUR = 18;
+  const FIRST_HOUR = 6;  // TODO
+  const LAST_HOUR = 23;  // TODO
   let nowHr = dayjs().hour();
-  // TODO - begin test code
-  console.log("Don't forget to remove test code!!");
-  nowHr = 13;
-  // TODO - end test code
   console.log('now hour = ' + nowHr);
   for (let hr=FIRST_HOUR;hr<=LAST_HOUR;hr++) {
     console.log('formatting hr = ' + hr);
