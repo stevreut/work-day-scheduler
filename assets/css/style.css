@@ -12,6 +12,7 @@ textarea {
   padding: 10px;
 }
 
+/* Temporarily applied to unsaved changes for a given hour */
 .unsaved {
   color: #a4b8c0;
   font-weight: bold;
