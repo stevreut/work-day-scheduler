@@ -12,6 +12,7 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
+  addSaveListener();
   //
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
@@ -139,6 +140,69 @@ function loadSavedCalendarInfo() {
       } else {
         console.log('set textarea for "' + hourKey + '" with "' + content + '"');
         txtArea.value = content;
+      }
+    }
+  }
+}
+
+function addSaveListener() {
+  console.log('adding listener');
+  let hourList = document.querySelector("#hour-list");
+  if (hourList === null) {
+    console.log("no hour-list identifier found when attempting to add listener");
+  } else {
+    hourList.addEventListener("click",function(event) {
+      console.log('listener triggered');
+      if (event.target.matches(".saveBtn")) {
+        console.log("click event IS a match");
+        let hourKey = event.target.parentElement.getAttribute("id");
+        console.log('key for changed item = ' + hourKey);
+        saveForHourKey(hourKey);
+      } else if (event.target.matches("i")) {
+        console.log("i tag intercepted");
+        let hourKey = event.target.parentElement.parentElement.getAttribute("id");
+        console.log("key (from i) for changed item = " + hourKey);
+        saveForHourKey(hourKey);
+      } else {
+        console.log("click event was not a match");
+        // TODO - need to understanding why
+      }
+    })
+  }
+}
+
+function saveForHourKey(hKey) {
+  let div = document.querySelector("#"+hKey);
+  if (div === null) {
+    console.log("no div found for key '" + hKey + "'");
+  } else {
+    content = document.querySelector("#"+hKey + " textarea").value;
+    console.log("textarea content to save  = '" + content + "'");
+    let numKey = parseInt(hKey.substring(5));  // Ignore "hour-" and convert to numeric
+    if (numKey === null) {
+      console.log("unable to parse from " + hKey);
+    } else {
+      console.log("numeric key to save = " + numKey);
+      let matchingEntryFound = false;
+      let matchedIdx = -1;
+      for (i=0;i<calendarInfo.length&&(!matchingEntryFound);i++) {
+        matchingEntryFound = (calendarInfo[i].key === numKey);
+        if (matchingEntryFound) {
+          matchedIdx = i;
+        }
+      }
+      if (matchingEntryFound) {
+        if (content !== calendarInfo[matchedIdx].content) {
+          console.log('altering idx ' + matchedIdx + ' in place');
+          calendarInfo[matchedIdx].content = content;
+          localStorage.setItem("calendar-info",JSON.stringify(calendarInfo));
+        }  // else no change and no need to save
+      } else {
+        if (content !== "") {
+          console.log('appending new entry for ' + numKey + ' ' + content);
+          calendarInfo.push({key:numKey,content:content});
+          localStorage.setItem("calendar-info",JSON.stringify(calendarInfo));
+        } // else no point in appending empty content - effectively a non-change
       }
     }
   }
