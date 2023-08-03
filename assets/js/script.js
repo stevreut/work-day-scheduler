@@ -34,8 +34,8 @@ function renderRows() {
 // <div id="hour-9" class="row time-block past/present/future">
 //   <div class="col-2 col-md-1 hour text-center py-3">9AM</div>
 //   <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
-//   <button class="btn saveBtn col-2 col-md-1" aria-label="save">
-//     <i class="fas fa-save" aria-hidden="true"></i>
+//   <button class="btn saveBtn col-2 col-md-1" aria-label="save" data-idx="9">
+//     <i class="fas fa-save" aria-hidden="true" data-idx="9"></i>
 //   </button>
 // </div>
   const FIRST_HOUR = 6;  // TODO
@@ -85,9 +85,11 @@ function renderRows() {
     let saveButton = document.createElement("button");
     saveButton.setAttribute("class","btn saveBtn col-2 col-md-1");
     saveButton.setAttribute("area-label","save");
+    saveButton.setAttribute("data-idx",hr);
     let iElem = document.createElement("i");
     iElem.setAttribute("class","fas fa-save");
     iElem.setAttribute("aria-hidden","true");
+    iElem.setAttribute("data-idx",hr);
     saveButton.appendChild(iElem);
     outerDiv.appendChild(saveButton);
     document.querySelector("#hour-list").appendChild(outerDiv);
@@ -149,15 +151,12 @@ function addSaveListener() {
   } else {
     hourList.addEventListener("click",function(event) {
       console.log('listener triggered');
-      if (event.target.matches(".saveBtn")) {
+      let elem = event.target;
+      if (elem.matches(".saveBtn") || elem.matches(".saveBtn>i")) {
         console.log("click event IS a match");
-        let hourKey = event.target.parentElement.getAttribute("id");
+        console.log("matched elem = '" + elem + "'");
+        let hourKey = "hour-" + elem.getAttribute("data-idx");
         console.log('key for changed item = ' + hourKey);
-        saveForHourKey(hourKey);
-      } else if (event.target.matches("i")) {
-        console.log("i tag intercepted");
-        let hourKey = event.target.parentElement.parentElement.getAttribute("id");
-        console.log("key (from i) for changed item = " + hourKey);
         saveForHourKey(hourKey);
       } else {
         console.log("click event was not a match");
